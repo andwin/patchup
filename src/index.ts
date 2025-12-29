@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 
+import verifyGitRepo from './utils/verify_git_repo'
+
 const run = async () => {
-  console.log("pkgup");
+  await verifyGitRepo()
 }
 
 run()
