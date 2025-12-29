@@ -1,9 +1,9 @@
 {
-  "name": "pkgup",
+  "name": "auto-package-updater",
   "version": "0.0.1",
-  "description": "",
+  "description": "Automatically update the packages in your projects",
   "bin": {
-    "pkgup": "./dist/index.js"
+    "auto-package-updater": "./dist/index.js"
   },
   "scripts": {
     "build": "tsc && chmod +x dist/index.js",
