@@ -8,7 +8,7 @@
   "scripts": {
     "build": "tsc && chmod +x dist/index.js",
     "dev": "tsc -w",
-    "test": "biome check . && vitest src run"
+    "test": "biome check . && vitest run src"
   },
   "keywords": [],
   "author": "",
