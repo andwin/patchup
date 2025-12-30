@@ -1,3 +1,3 @@
-type PackageManager = 'pnpm' | 'yarn' | 'npm'
+type PackageManager = 'pnpm'
 
 export default PackageManager
