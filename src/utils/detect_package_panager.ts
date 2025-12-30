@@ -1,7 +1,6 @@
 import { access } from 'node:fs/promises'
 import { join } from 'node:path'
-
-type PackageManager = 'pnpm' | 'yarn' | 'npm'
+import type PackageManager from '../types/package_manager'
 
 const detectPackageManager = async (): Promise<PackageManager> => {
   if (await exists('pnpm-lock.yaml')) return 'pnpm'
