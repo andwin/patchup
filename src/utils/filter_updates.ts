@@ -1,14 +1,6 @@
 import type Update from '../types/update'
 import type VersionDiff from '../types/version_diff'
-
-const versionDiffValues: { [key in VersionDiff]: number } = {
-  major: 1,
-  minor: 2,
-  patch: 3,
-}
-const validVersionDiffsString = Object.keys(versionDiffValues)
-  .map((key) => `"${key}"`)
-  .join(', ')
+import versionDiffValues from './version_diff_values'
 
 const filterUpdates = (
   updates: Update[],
@@ -16,11 +8,6 @@ const filterUpdates = (
   maxVersionDiff: VersionDiff | undefined,
 ): Update[] => {
   if (maxVersionDiff) {
-    if (versionDiffValues[maxVersionDiff] === undefined) {
-      throw new Error(
-        `Invalid max version diff: "${maxVersionDiff}". Valid values are ${validVersionDiffsString}`,
-      )
-    }
     return updates.filter((update) => {
       return (
         versionDiffValues[update.value.diff as VersionDiff] >=

@@ -8,6 +8,7 @@ import filterWorkspaces from './utils/filter_workspaces'
 import listUpdatesForWorkspace from './utils/list_updates_for_workspace'
 import listWorkspaces from './utils/list_workspaces'
 import verifyGitRepo from './utils/verify_git_repo'
+import { verifyMaxVersionDiff } from './utils/verify_max_version_diff'
 import verifyPristineState from './utils/verify_pristine_state'
 
 const commandLineArgsDefinitions = [
@@ -26,6 +27,7 @@ const {
 const run = async () => {
   await verifyGitRepo()
   await verifyPristineState()
+  verifyMaxVersionDiff(maxVersionDiff)
   const packageManager = await detectPackageManager()
   console.log(`Using ${packageManager} as package manager`)
 
