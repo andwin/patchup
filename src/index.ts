@@ -3,6 +3,7 @@
 import { checkbox, Separator } from '@inquirer/prompts'
 import commandLineArgs from 'command-line-args'
 import type Update from './types/update'
+import applyUpdate from './utils/apply_update'
 import detectPackageManager from './utils/detect_package_panager'
 import filterUpdates from './utils/filter_updates'
 import filterWorkspaces from './utils/filter_workspaces'
@@ -81,6 +82,9 @@ const run = async () => {
   })
 
   console.log('updatesToApply', updatesToApply)
+  for (const update of updatesToApply) {
+    await applyUpdate(packageManager, update)
+  }
 }
 
 run()
