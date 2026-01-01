@@ -6,6 +6,7 @@ import type Update from './types/update'
 import detectPackageManager from './utils/detect_package_panager'
 import filterUpdates from './utils/filter_updates'
 import filterWorkspaces from './utils/filter_workspaces'
+import installPackagesBeforeUpdate from './utils/install_packages_before_update'
 import listUpdatesForWorkspace from './utils/list_updates_for_workspace'
 import listWorkspaces from './utils/list_workspaces'
 import verifyGitRepo from './utils/verify_git_repo'
@@ -31,6 +32,8 @@ const run = async () => {
   verifyMaxVersionDiff(maxVersionDiff)
   const packageManager = await detectPackageManager()
   console.log(`Using ${packageManager} as package manager`)
+
+  await installPackagesBeforeUpdate(packageManager)
 
   const workspaces = await listWorkspaces(packageManager)
   console.log('workspaces', workspaces)
