@@ -28,7 +28,7 @@ test('return all updates if no filter is provided', () => {
   ]
   const packages = undefined
   const maxVersionDiff = undefined
-  const expected = [
+  const expected: Update[] = [
     {
       packageName: 'vitest',
       workspace: { name: 'root', root: true },
@@ -83,7 +83,7 @@ test('filter updates by packages name when packages argument is provided', () =>
   ]
   const packages = ['zod', 'sass']
   const maxVersionDiff = undefined
-  const expected = [
+  const expected: Update[] = [
     {
       packageName: 'zod',
       workspace: { name: 'root', root: true },
@@ -131,7 +131,7 @@ test('filters updates with version diff greater that minor when max version diff
   ]
   const packages = undefined
   const maxVersionDiff = 'minor'
-  const expected = [
+  const expected: Update[] = [
     {
       packageName: 'zod',
       workspace: { name: 'root', root: true },
@@ -179,7 +179,7 @@ test('filters updates with version diff greater that patch when max version diff
   ]
   const packages = undefined
   const maxVersionDiff = 'patch'
-  const expected = [
+  const expected: Update[] = [
     {
       packageName: 'sass',
       workspace: { name: 'root', root: true },
@@ -220,7 +220,7 @@ test('returns all updates when max version diff is set to major', () => {
   ]
   const packages = undefined
   const maxVersionDiff = 'major'
-  const expected = [
+  const expected: Update[] = [
     {
       packageName: 'vitest',
       workspace: { name: 'root', root: true },
@@ -275,7 +275,7 @@ test('filter updates by both package names and max version diff', () => {
   ]
   const packages = ['vitest', 'sass']
   const maxVersionDiff = 'minor'
-  const expected = [
+  const expected: Update[] = [
     {
       packageName: 'sass',
       workspace: { name: 'root', root: true },

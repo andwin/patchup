@@ -10,7 +10,7 @@ test('filter workspaces by name', () => {
     { name: '@repo/utils', root: false },
   ]
   const filter = ['web', '@repo/utils']
-  const expected = [
+  const expected: Workspace[] = [
     { name: 'web', root: false },
     { name: '@repo/utils', root: false },
   ]
@@ -28,7 +28,7 @@ test('returns all workspaces if no filter is provided', () => {
     { name: '@repo/utils', root: false },
   ]
   const filter: string[] = []
-  const expected = [
+  const expected: Workspace[] = [
     { name: 'root', root: true },
     { name: 'web', root: false },
     { name: 'admin', root: false },
