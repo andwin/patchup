@@ -8,13 +8,6 @@ const listWorkspacesForPnpm = async (): Promise<Workspace[]> => {
     (workspace: { name: string }) => ({ name: workspace.name, root: false }),
   )
 
-  if (workspaces.length > 1) {
-    const rootWorkspace = workspaces.at(0)
-    if (rootWorkspace) {
-      rootWorkspace.root = true
-    }
-  }
-
   return workspaces
 }
 
@@ -29,6 +22,13 @@ const listWorkspaces = async (
   packageManager: PackageManager,
 ): Promise<Workspace[]> => {
   const workspaces = await implementationForPackageManager[packageManager]()
+
+  if (workspaces.length > 1) {
+    const rootWorkspace = workspaces.at(0)
+    if (rootWorkspace) {
+      rootWorkspace.root = true
+    }
+  }
 
   return workspaces
 }
