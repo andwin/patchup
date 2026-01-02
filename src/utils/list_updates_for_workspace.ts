@@ -59,13 +59,18 @@ const listUpdatesForWorkspaceForPnpm = async (
         }
         return update
       } catch (e) {
+        const workspaceName = workspace.name
+          ? ` workspace: ${workspace.name}`
+          : ''
+
         console.error(
           (e as Error).message +
             packageName +
             ' currentVersion: ' +
             currentVersion +
             ' latestVersion: ' +
-            latestVersion,
+            latestVersion +
+            workspaceName,
         )
         return undefined
       }
