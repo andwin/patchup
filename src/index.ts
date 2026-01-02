@@ -69,7 +69,9 @@ const run = async () => {
       console.log(update.name, update.value.diff)
     }
 
-    choices.push(new Separator(workspace.name))
+    if (workspace.name) {
+      choices.push(new Separator(workspace.name))
+    }
     choices.push(
       ...filteredUpdates.map((update) => ({
         name: update.name,

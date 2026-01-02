@@ -6,7 +6,7 @@ const applyUpdateForPnpm = async (update: Update): Promise<void> => {
   const args: string[] = []
   if (update.value.workspace.root) {
     args.push('-w')
-  } else {
+  } else if (update.value.workspace.name) {
     args.push('--filter', update.value.workspace.name)
   }
 

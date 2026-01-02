@@ -24,10 +24,12 @@ const listWorkspaces = async (
   const workspaces = await implementationForPackageManager[packageManager]()
 
   if (workspaces.length > 1) {
-    const rootWorkspace = workspaces.at(0)
-    if (rootWorkspace) {
-      rootWorkspace.root = true
-    }
+    workspaces[0].root = true
+  }
+
+  if (workspaces.length === 1) {
+    // We don't need to know the name of the workspace if there is only one
+    workspaces[0].name = ''
   }
 
   return workspaces
