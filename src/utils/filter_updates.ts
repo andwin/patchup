@@ -12,7 +12,7 @@ const filterUpdates = (
   if (maxVersionDiff) {
     filteredUpdates = filteredUpdates.filter((update) => {
       return (
-        versionDiffValues[update.versionDiff as VersionDiff] >=
+        versionDiffValues[update.versionDiff] >=
         versionDiffValues[maxVersionDiff]
       )
     })

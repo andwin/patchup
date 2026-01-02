@@ -2,7 +2,9 @@ import { execa } from 'execa'
 import semver from 'semver'
 import type PackageManager from '../types/package_manager'
 import type Update from '../types/update'
+import type VersionDiff from '../types/version_diff'
 import type Workspace from '../types/workspace'
+import versionDiffValues from './version_diff_values'
 
 const listUpdatesForWorkspaceForPnpm = async (
   workspace: Workspace,
@@ -37,23 +39,34 @@ const listUpdatesForWorkspaceForPnpm = async (
       if (isDeprecated) return undefined
 
       try {
-        const versionDiff =
-          semver.diff(currentVersion, latestVersion) ?? 'unknown'
+        let versionDiff: string | null
+        try {
+          versionDiff = semver.diff(currentVersion, latestVersion)
+        } catch {
+          throw new Error('Exception parsing semver diff for package')
+        }
+
+        if (!versionDiff || !versionDiffValues[versionDiff as VersionDiff]) {
+          throw new Error('Invalid version diff for package')
+        }
+
         const update: Update = {
           packageName,
           workspace,
-          versionDiff,
+          versionDiff: versionDiff as VersionDiff,
           currentVersion,
           latestVersion,
         }
         return update
       } catch (e) {
         console.error(
-          'Exception parsing semver diff for package ' +
+          (e as Error).message +
             packageName +
-            ' is the package installed?',
+            ' currentVersion: ' +
+            currentVersion +
+            ' latestVersion: ' +
+            latestVersion,
         )
-        console.error(e)
         return process.exit(1)
       }
     })
