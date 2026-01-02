@@ -67,7 +67,7 @@ const listUpdatesForWorkspaceForPnpm = async (
             ' latestVersion: ' +
             latestVersion,
         )
-        return process.exit(1)
+        return undefined
       }
     })
     .filter(Boolean) as Update[]
