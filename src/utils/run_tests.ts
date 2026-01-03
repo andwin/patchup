@@ -16,7 +16,6 @@ const runTests = async (packageManager: PackageManager) => {
   try {
     await implementationForPackageManager[packageManager]()
   } catch {
-    // console.error(e as Error)
     throw new Error('Tests failed')
   }
 }
