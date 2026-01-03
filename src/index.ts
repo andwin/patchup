@@ -78,6 +78,9 @@ const run = async () => {
     for (const update of filteredUpdates) {
       console.log(update.packageName, update.versionDiff)
     }
+    if (!filteredUpdates.length) {
+      continue
+    }
 
     if (workspace.name) {
       choices.push(new Separator(workspace.name))
@@ -88,6 +91,11 @@ const run = async () => {
         value: update,
       })),
     )
+  }
+
+  if (!choices.length) {
+    console.error('No updates available')
+    process.exit(0)
   }
 
   const updatesToApply = await checkbox({
