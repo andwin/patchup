@@ -24,16 +24,17 @@ const commandLineArgsDefinitions = [
 ]
 
 const commandLineArguments = commandLineArgs(commandLineArgsDefinitions)
-const {
-  workspace,
-  package: packages,
-  'max-version-diff': maxVersionDiff,
-} = commandLineArguments
+
+const filter = {
+  workspaces: commandLineArguments.workspace,
+  packages: commandLineArguments.package,
+  maxVersionDiff: commandLineArguments['max-version-diff'],
+}
 
 const run = async () => {
   await verifyGitRepo()
   await verifyPristineState()
-  verifyMaxVersionDiff(maxVersionDiff)
+  verifyMaxVersionDiff(filter.maxVersionDiff)
   const packageManager = await detectPackageManager()
   console.log(`Using ${packageManager} as package manager`)
 
@@ -41,12 +42,12 @@ const run = async () => {
 
   const workspaces = await listWorkspaces(packageManager)
   console.log('workspaces', workspaces)
-  console.log('workspace filter', workspace)
-  const filteredWorkspaces = filterWorkspaces(workspaces, workspace)
+  console.log('workspace filter', filter.workspaces)
+  const filteredWorkspaces = filterWorkspaces(workspaces, filter.workspaces)
   console.log('filteredWorkspaces', filteredWorkspaces)
 
-  console.log('packages', packages)
-  console.log('maxVersionDiff', maxVersionDiff)
+  console.log('packages', filter.packages)
+  console.log('maxVersionDiff', filter.maxVersionDiff)
 
   const choices = []
 
@@ -59,7 +60,11 @@ const run = async () => {
     }
     let filteredUpdates: Update[]
     try {
-      filteredUpdates = filterUpdates(updates, packages, maxVersionDiff)
+      filteredUpdates = filterUpdates(
+        updates,
+        filter.packages,
+        filter.maxVersionDiff,
+      )
     } catch (e) {
       console.error(e)
       process.exit(1)
