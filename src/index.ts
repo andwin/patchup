@@ -96,6 +96,11 @@ const run = async () => {
     pageSize: 20,
   })
 
+  if (!updatesToApply.length) {
+    console.error('No updates selected')
+    process.exit(0)
+  }
+
   console.log('updatesToApply', updatesToApply)
   for (const update of updatesToApply) {
     try {
