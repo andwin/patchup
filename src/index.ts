@@ -49,6 +49,11 @@ const run = async () => {
   console.log('packages', filter.packages)
   console.log('maxVersionDiff', filter.maxVersionDiff)
 
+  if (!filteredWorkspaces.length) {
+    console.error('No matching workspaces found')
+    process.exit(1)
+  }
+
   const choices = []
 
   for (const workspace of filteredWorkspaces) {
