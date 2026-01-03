@@ -18,14 +18,14 @@ import { verifyMaxVersionDiff } from './utils/verify_max_version_diff'
 import verifyPristineState from './utils/verify_pristine_state'
 
 const commandLineArgsDefinitions = [
-  { name: 'filter', type: String, multiple: true },
+  { name: 'workspace', type: String, multiple: true },
   { name: 'package', type: String, multiple: true },
   { name: 'max-version-diff', type: String },
 ]
 
 const commandLineArguments = commandLineArgs(commandLineArgsDefinitions)
 const {
-  filter,
+  workspace,
   package: packages,
   'max-version-diff': maxVersionDiff,
 } = commandLineArguments
@@ -41,8 +41,8 @@ const run = async () => {
 
   const workspaces = await listWorkspaces(packageManager)
   console.log('workspaces', workspaces)
-  console.log('filter', filter)
-  const filteredWorkspaces = filterWorkspaces(workspaces, filter)
+  console.log('workspace filter', workspace)
+  const filteredWorkspaces = filterWorkspaces(workspaces, workspace)
   console.log('filteredWorkspaces', filteredWorkspaces)
 
   console.log('packages', packages)
