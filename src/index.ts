@@ -13,6 +13,7 @@ import installPackagesBeforeUpdate from './utils/install_packages'
 import listUpdatesForWorkspace from './utils/list_updates_for_workspace'
 import listWorkspaces from './utils/list_workspaces'
 import rollbackUpdate from './utils/rollback_update'
+import runCustomCommand from './utils/run_custom_command'
 import runTests from './utils/run_tests'
 import verifyGitRepo from './utils/verify_git_repo'
 import { verifyMaxVersionDiff } from './utils/verify_max_version_diff'
@@ -22,6 +23,7 @@ const commandLineArgsDefinitions = [
   { name: 'workspace', type: String, multiple: true },
   { name: 'package', type: String, multiple: true },
   { name: 'max-version-diff', type: String },
+  { name: 'test-command', type: String },
 ]
 
 const commandLineArguments = commandLineArgs(commandLineArgsDefinitions)
@@ -31,6 +33,10 @@ const filter = {
   packages: commandLineArguments.package,
   maxVersionDiff: commandLineArguments['max-version-diff'],
 }
+const customCommands = {
+  test: commandLineArguments['test-command'],
+}
+
 const logfile = 'auto-package-updater.log'
 
 const run = async () => {
@@ -118,8 +124,14 @@ const run = async () => {
     try {
       console.log('Updating package', update.packageName)
       await applyUpdate(packageManager, update)
-      console.log('running tests')
-      await runTests(packageManager)
+
+      if (customCommands.test) {
+        console.log('running custom test command')
+        await runCustomCommand(customCommands.test)
+      } else {
+        console.log('running tests')
+        await runTests(packageManager)
+      }
     } catch (e) {
       const error = e as Error & { stdout?: string }
       console.error(error.message)
