@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import fs from 'node:fs/promises'
 import { checkbox, Separator } from '@inquirer/prompts'
 import commandLineArgs from 'command-line-args'
 import type Update from './types/update'
@@ -30,6 +31,7 @@ const filter = {
   packages: commandLineArguments.package,
   maxVersionDiff: commandLineArguments['max-version-diff'],
 }
+const logfile = 'auto-package-updater.log'
 
 const run = async () => {
   await verifyGitRepo()
@@ -37,6 +39,8 @@ const run = async () => {
   verifyMaxVersionDiff(filter.maxVersionDiff)
   const packageManager = await detectPackageManager()
   console.log(`Using ${packageManager} as package manager`)
+
+  await fs.unlink(logfile).catch(() => {})
 
   await installPackagesBeforeUpdate(packageManager)
 
@@ -117,7 +121,14 @@ const run = async () => {
       console.log('running tests')
       await runTests(packageManager)
     } catch (e) {
-      console.error((e as Error).message)
+      const error = e as Error & { stdout?: string }
+      console.error(error.message)
+      let logMessage = `❌ Updating ${update.packageName} in ${update.workspace.name} failed`
+      if (error.stdout) {
+        logMessage += `\n\n\n ${error.stdout}`
+      }
+      await fs.appendFile(logfile, logMessage)
+
       console.log('rolling back update')
       await rollbackUpdate(packageManager)
       continue
