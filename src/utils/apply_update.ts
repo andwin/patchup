@@ -28,8 +28,9 @@ const applyUpdate = async (
 ): Promise<void> => {
   try {
     await implementationForPackageManager[packageManager](update)
-  } catch {
-    throw new Error('Failed to apply update')
+  } catch (e) {
+    ;(e as Error).message = 'Failed to apply update'
+    throw e
   }
 }
 
