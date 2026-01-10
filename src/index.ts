@@ -122,7 +122,11 @@ const run = async () => {
   console.log('updatesToApply', updatesToApply)
   for (const update of updatesToApply) {
     try {
-      console.log('Updating package', update.packageName)
+      console.log(
+        'Updating package',
+        update.packageName,
+        update.workspace.name ? `in ${update.workspace.name}` : '',
+      )
       await applyUpdate(packageManager, update)
 
       if (customCommands.test) {
