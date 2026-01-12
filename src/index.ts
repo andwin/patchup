@@ -3,10 +3,14 @@
 import fs from 'node:fs/promises'
 import { checkbox, Separator } from '@inquirer/prompts'
 import commandLineArgs from 'command-line-args'
+import commandLineUsage from 'command-line-usage'
 import type Update from './types/update'
 import applyUpdate from './utils/apply_update'
 import commitUpdate from './utils/commit_update'
 import detectPackageManager from './utils/detect_package_panager'
+import displayHelp, {
+  type OptionDefinitionWithDescription,
+} from './utils/display_help'
 import filterUpdates from './utils/filter_updates'
 import filterWorkspaces from './utils/filter_workspaces'
 import installPackagesBeforeUpdate from './utils/install_packages'
@@ -19,12 +23,43 @@ import verifyGitRepo from './utils/verify_git_repo'
 import { verifyMaxVersionDiff } from './utils/verify_max_version_diff'
 import verifyPristineState from './utils/verify_pristine_state'
 
-const commandLineArgsDefinitions = [
-  { name: 'workspace', alias: 'w', type: String, multiple: true },
-  { name: 'package', alias: 'p', type: String, multiple: true },
-  { name: 'max-version-diff', alias: 'm', type: String },
-  { name: 'test', type: String },
-  { name: 'pre-update', type: String },
+const commandLineArgsDefinitions: OptionDefinitionWithDescription[] = [
+  {
+    name: 'help',
+    alias: 'h',
+    type: Boolean,
+    description: 'Display this usage guide.',
+  },
+  {
+    name: 'workspace',
+    alias: 'w',
+    type: String,
+    multiple: true,
+    description: 'Filter updates by workspace name.',
+  },
+  {
+    name: 'package',
+    alias: 'p',
+    type: String,
+    multiple: true,
+    description: 'Filter updates by package name.',
+  },
+  {
+    name: 'max-version-diff',
+    alias: 'm',
+    type: String,
+    description: 'Filter updates by maximum version difference.',
+  },
+  {
+    name: 'test',
+    type: String,
+    description: 'Custom command to run tests after updating packages.',
+  },
+  {
+    name: 'pre-update',
+    type: String,
+    description: 'Custom command to run before updating packages.',
+  },
 ]
 
 const commandLineArguments = commandLineArgs(commandLineArgsDefinitions)
@@ -42,6 +77,11 @@ const customCommands = {
 const logfile = 'auto-package-updater.log'
 
 const run = async () => {
+  if (commandLineArguments.help) {
+    displayHelp(commandLineArgsDefinitions)
+    process.exit(0)
+  }
+
   await verifyGitRepo()
   await verifyPristineState()
   verifyMaxVersionDiff(filter.maxVersionDiff)
