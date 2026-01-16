@@ -153,6 +153,7 @@ const run = async () => {
     message: 'Select updates to apply',
     choices: choices,
     pageSize: 20,
+    loop: false,
   })
 
   if (!updatesToApply.length) {
