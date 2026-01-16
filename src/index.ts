@@ -2,6 +2,7 @@
 
 import fs from 'node:fs/promises'
 import { checkbox, Separator } from '@inquirer/prompts'
+import chalk from 'chalk'
 import commandLineArgs from 'command-line-args'
 import type Update from './types/update'
 import applyUpdate from './utils/apply_update'
@@ -12,6 +13,7 @@ import displayHelp, {
 } from './utils/display_help'
 import filterUpdates from './utils/filter_updates'
 import filterWorkspaces from './utils/filter_workspaces'
+import inquirerTheme from './utils/inquirer_theme'
 import installPackagesBeforeUpdate from './utils/install_packages'
 import listUpdatesForWorkspace from './utils/list_updates_for_workspace'
 import listWorkspaces from './utils/list_workspaces'
@@ -137,7 +139,7 @@ const run = async () => {
       choices.push(new Separator(' '))
     }
     if (workspace.name) {
-      choices.push(new Separator(workspace.name))
+      choices.push(new Separator(chalk.bold(workspace.name)))
     }
     choices.push(
       ...filteredUpdates.map((update) => ({
@@ -156,6 +158,7 @@ const run = async () => {
     message: 'Select updates to apply',
     choices: choices,
     pageSize: 20,
+    theme: inquirerTheme,
     loop: false,
   })
 
