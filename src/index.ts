@@ -9,9 +9,7 @@ import applyUpdate from './utils/apply_update'
 import commandLineArgsDefinitions from './utils/command_linke_args_definitions'
 import commitUpdate from './utils/commit_update'
 import detectPackageManager from './utils/detect_package_panager'
-import displayHelp, {
-  type OptionDefinitionWithDescription,
-} from './utils/display_help'
+import displayHelp from './utils/display_help'
 import filterUpdates from './utils/filter_updates'
 import filterWorkspaces from './utils/filter_workspaces'
 import inquirerTheme from './utils/inquirer_theme'

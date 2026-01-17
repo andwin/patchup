@@ -1,3 +1,5 @@
+import type { OptionDefinitionWithDescription } from './display_help'
+
 const commandLineArgsDefinitions: OptionDefinitionWithDescription[] = [
   {
     name: 'help',
