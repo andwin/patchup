@@ -1,6 +1,6 @@
 {
   "name": "auto-package-updater",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Automatically update the packages in your projects",
   "bin": {
     "auto-package-updater": "./dist/index.js"
