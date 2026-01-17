@@ -17,6 +17,7 @@ import inquirerTheme from './utils/inquirer_theme'
 import installPackagesBeforeUpdate from './utils/install_packages'
 import listUpdatesForWorkspace from './utils/list_updates_for_workspace'
 import listWorkspaces from './utils/list_workspaces'
+import { enableDebug, logger } from './utils/logger'
 import rollbackUpdate from './utils/rollback_update'
 import runCommand from './utils/run_command'
 import runTests from './utils/run_tests'
@@ -30,6 +31,13 @@ const commandLineArgsDefinitions: OptionDefinitionWithDescription[] = [
     alias: 'h',
     type: Boolean,
     description: 'Display this usage guide.',
+  },
+  {
+    name: 'debug',
+    alias: 'd',
+    type: Boolean,
+    defaultValue: false,
+    description: 'Enable debug mode.',
   },
   {
     name: 'workspace',
@@ -83,38 +91,41 @@ const run = async () => {
     process.exit(0)
   }
 
+  enableDebug(commandLineArguments.debug)
+  logger.debug('Debug mode enabled')
+
   await verifyGitRepo()
   await verifyPristineState()
   verifyMaxVersionDiff(filter.maxVersionDiff)
   const packageManager = await detectPackageManager()
-  console.log(`Using ${packageManager} as package manager`)
+  logger.debug('Detected package manager', packageManager)
 
   await fs.unlink(logfile).catch(() => {})
 
   await installPackagesBeforeUpdate(packageManager)
 
   const workspaces = await listWorkspaces(packageManager)
-  console.log('workspaces', workspaces)
-  console.log('workspace filter', filter.workspaces)
+  logger.debug('Workspaces', workspaces)
+  logger.debug('Workspace filter', filter.workspaces)
   const filteredWorkspaces = filterWorkspaces(workspaces, filter.workspaces)
-  console.log('filteredWorkspaces', filteredWorkspaces)
+  logger.debug('Filtered workspaces', filteredWorkspaces)
 
-  console.log('packages', filter.packages)
-  console.log('maxVersionDiff', filter.maxVersionDiff)
+  logger.debug('Packages filter', filter.packages)
+  logger.debug('Max version diff filter', filter.maxVersionDiff)
 
   if (!filteredWorkspaces.length) {
-    console.error('No matching workspaces found')
+    logger.error('No matching workspaces found')
     process.exit(1)
   }
 
+  logger.info('Listing updates')
   const choices = []
-
   for (const workspace of filteredWorkspaces) {
-    console.log('listing updates for workspace', workspace)
+    logger.debug('Listing updates for workspace', workspace)
     const updates = await listUpdatesForWorkspace(workspace, packageManager)
-    console.log('Updates', updates.length)
+    logger.debug('Updates found', updates.length)
     for (const update of updates) {
-      console.log(update.packageName, update.versionDiff)
+      logger.debug(update.packageName, update.versionDiff)
     }
     let filteredUpdates: Update[]
     try {
@@ -124,12 +135,13 @@ const run = async () => {
         filter.maxVersionDiff,
       )
     } catch (e) {
-      console.error(e)
+      logger.error('Error filtering updates', e)
       process.exit(1)
     }
-    console.log('Filtered updates', filteredUpdates.length)
+
+    logger.debug('Filtered updates', filteredUpdates.length)
     for (const update of filteredUpdates) {
-      console.log(update.packageName, update.versionDiff)
+      logger.debug(update.packageName, update.versionDiff)
     }
     if (!filteredUpdates.length) {
       continue
@@ -150,7 +162,7 @@ const run = async () => {
   }
 
   if (!choices.length) {
-    console.error('No updates available')
+    logger.error('No updates available')
     process.exit(0)
   }
 
@@ -163,36 +175,42 @@ const run = async () => {
   })
 
   if (!updatesToApply.length) {
-    console.error('No updates selected')
+    logger.error('No updates selected')
     process.exit(0)
   }
 
-  console.log('updatesToApply', updatesToApply)
+  logger.debug(
+    'Updates to apply',
+    updatesToApply.map((update) => ({
+      package: update.packageName,
+      workspace: update.workspace.name,
+    })),
+  )
   for (const update of updatesToApply) {
     try {
-      console.log(
+      logger.info(
         'Updating package',
         update.packageName,
         update.workspace.name ? `in ${update.workspace.name}` : '',
       )
 
       if (customCommands.preUpdate) {
-        console.log('running custom pre-update command')
+        logger.info('Running custom pre-update command')
         await runCommand(customCommands.preUpdate)
       }
 
       await applyUpdate(packageManager, update)
 
       if (customCommands.test) {
-        console.log('running custom test command')
+        logger.info('Running custom test command')
         await runCommand(customCommands.test)
       } else {
-        console.log('running tests')
+        logger.info('Running tests')
         await runTests(packageManager)
       }
     } catch (e) {
       const error = e as Error & { stdout?: string; stderr?: string }
-      console.error(error.message)
+      logger.error(error.message)
       let logMessage = `❌ Updating ${update.packageName} in ${update.workspace.name} failed`
       logMessage += `\n\n${error.message}`
       if (error.stderr) {
@@ -204,11 +222,12 @@ const run = async () => {
       logMessage += `\n\n`
       await fs.appendFile(logfile, logMessage)
 
-      console.log('rolling back update')
+      logger.info('Rolling back update')
       await rollbackUpdate(packageManager)
       continue
     }
-    console.log('update applied successfully')
+
+    logger.info('Update applied successfully')
     await commitUpdate(update)
   }
 }
