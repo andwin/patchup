@@ -1,19 +1,14 @@
 import { execa } from 'execa'
 import type PackageManager from '../types/package_manager'
 
-const installPackagesForPnpm = async () => {
-  await execa`pnpm install`
-}
-
-const implementationForPackageManager: Record<
-  PackageManager,
-  () => Promise<void>
-> = {
-  pnpm: installPackagesForPnpm,
+const packageManagerCommand: Record<PackageManager, string> = {
+  pnpm: 'pnpm install',
+  npm: 'npm ci',
 }
 
 const installPackages = async (packageManager: PackageManager) => {
-  await implementationForPackageManager[packageManager]()
+  const command = packageManagerCommand[packageManager]
+  await execa(command, { shell: process.env.SHELL || true })
 }
 
 export default installPackages

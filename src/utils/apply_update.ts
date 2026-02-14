@@ -15,11 +15,27 @@ const applyUpdateForPnpm = async (update: Update): Promise<void> => {
   await execa('pnpm', args)
 }
 
+const applyUpdateForNpm = async (update: Update): Promise<void> => {
+  const args: string[] = []
+  if (!update.workspace.root) {
+    args.push('--workspace', update.workspace.name)
+  }
+
+  args.push(
+    'install',
+    `${update.packageName}@${update.latestVersion}`,
+    '--save-exact',
+  )
+
+  await execa('npm', args)
+}
+
 const implementationForPackageManager: Record<
   PackageManager,
   (update: Update) => Promise<void>
 > = {
   pnpm: applyUpdateForPnpm,
+  npm: applyUpdateForNpm,
 }
 
 const applyUpdate = async (

@@ -4,6 +4,7 @@ import type PackageManager from '../types/package_manager'
 
 const lockFileForPackageManager: Record<PackageManager, string> = {
   pnpm: 'pnpm-lock.yaml',
+  npm: 'package-lock.json',
 }
 
 const detectPackageManager = async (): Promise<PackageManager> => {

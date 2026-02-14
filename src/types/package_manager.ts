@@ -1,3 +1,3 @@
-type PackageManager = 'pnpm'
+type PackageManager = 'pnpm' | 'npm'
 
 export default PackageManager
