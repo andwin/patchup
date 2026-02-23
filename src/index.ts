@@ -36,7 +36,7 @@ const customCommands = {
   preUpdate: commandLineArguments['pre-update'],
 }
 
-const logfile = 'auto-package-updater.log'
+const logfile = 'patchup.log'
 
 const run = async () => {
   if (commandLineArguments.help) {

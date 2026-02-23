@@ -17,7 +17,7 @@ const displayHelp = (
       },
       {
         header: 'Usage',
-        content: 'auto-package-updater [options]',
+        content: 'patchup [options]',
       },
       {
         header: 'Options',

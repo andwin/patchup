@@ -1,4 +1,4 @@
-# Auto Package Updater
+# Patchup
 
 Automatically update npm packages one at a time, running tests after each update and committing successful updates to git.
 
@@ -14,7 +14,7 @@ Automatically update npm packages one at a time, running tests after each update
 ## Usage
 
 ```bash
-npx auto-package-updater [options]
+npx patchup [options]
 ```
 
 ### Options
@@ -32,16 +32,16 @@ npx auto-package-updater [options]
 
 ```bash
 # Update all packages interactively
-npx auto-package-updater
+npx patchup
 
 # Only patch updates in a specific workspace and a with max version diff of patch
-npx auto-package-updater -w admin -m patch
+npx patchup -w admin -m patch
 
 # Use a custom test command
-npx auto-package-updater --test "npm run test:ci"
+npx patchup --test "npm run test:ci"
 
 # Filter for specific packages
-npx auto-package-updater -p sass -p dayjs
+npx patchup -p sass -p dayjs
 ```
 
 ## Development
@@ -57,6 +57,6 @@ pnpm publish
 
 # Link
 pnpm link --global
-pnpm remove --global auto-package-updater
+pnpm remove --global patchup
 pnpm list --global
 ```
