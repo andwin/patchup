@@ -1,9 +1,9 @@
 {
-  "name": "auto-package-updater",
+  "name": "patchup",
   "version": "0.1.0",
   "description": "Automatically update the packages in your projects",
   "bin": {
-    "auto-package-updater": "./dist/index.js"
+    "patchup": "./dist/index.js"
   },
   "scripts": {
     "build": "rm -rf dist && tsc && chmod +x dist/index.js",
