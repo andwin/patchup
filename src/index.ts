@@ -119,13 +119,21 @@ const run = async () => {
     process.exit(0)
   }
 
-  const updatesToApply = await checkbox({
-    message: 'Select updates to apply',
-    choices: choices,
-    pageSize: 20,
-    theme: inquirerTheme,
-    loop: false,
-  })
+  let updatesToApply: Update[]
+  try {
+    updatesToApply = await checkbox({
+      message: 'Select updates to apply',
+      choices: choices,
+      pageSize: 20,
+      theme: inquirerTheme,
+      loop: false,
+    })
+  } catch (e) {
+    if (e instanceof Error && e.name === 'ExitPromptError') {
+      process.exit(0)
+    }
+    throw e
+  }
 
   if (!updatesToApply.length) {
     logger.error('No updates selected')
