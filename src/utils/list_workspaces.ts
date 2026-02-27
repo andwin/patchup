@@ -14,7 +14,7 @@ const listWorkspacesForPnpm = async (): Promise<Workspace[]> => {
 const listWorkspacesForNpm = async (): Promise<Workspace[]> => {
   const result = await execa({
     shell: true,
-  })`find . -name "node_modules" -prune -o -name "package.json" -type f -print | grep -v "^\\.\\/\\$" | xargs -n1 dirname`
+  })`find . -path './.*' -prune -o -path '*/node_modules' -prune -o -name 'package.json' -type f -print | xargs -n1 dirname`
 
   const workspaces: Workspace[] = result.stdout
     .split('\n')
