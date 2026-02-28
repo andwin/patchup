@@ -148,11 +148,13 @@ const run = async () => {
     })),
   )
   for (const update of updatesToApply) {
+    logger.info('') // Space between updates
+
     try {
       logger.info(
         'Updating package',
-        update.packageName,
-        update.workspace.name ? `in ${update.workspace.name}` : '',
+        chalk.bold(update.packageName),
+        update.workspace.name ? `in ${chalk.bold(update.workspace.name)}` : '',
       )
 
       if (customCommands.preUpdate) {
@@ -171,7 +173,7 @@ const run = async () => {
       }
     } catch (e) {
       const error = e as Error & { stdout?: string; stderr?: string }
-      logger.error(error.message)
+      logger.error(`❌ ${error.message}`)
       let logMessage = `❌ Updating ${update.packageName} in ${update.workspace.name} failed`
       logMessage += `\n\n${error.message}`
       if (error.stderr) {
@@ -188,7 +190,7 @@ const run = async () => {
       continue
     }
 
-    logger.info('Update applied successfully')
+    logger.info('✅ Update applied successfully')
     await commitUpdate(update)
   }
 }
