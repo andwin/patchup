@@ -11,8 +11,18 @@
     "test": "tsc --noEmit && biome check . && vitest run src",
     "prepublishOnly": "npm test && npm run build"
   },
-  "keywords": [],
   "author": "",
+  "keywords": [
+    "update",
+    "upgrade",
+    "dependencies",
+    "dependency-management",
+    "packages",
+    "outdated",
+    "automation",
+    "cli",
+    "testing"
+  ],
   "license": "ISC",
   "packageManager": "pnpm@10.20.0",
   "dependencies": {
