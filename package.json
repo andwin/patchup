@@ -24,6 +24,10 @@
   ],
   "author": "Anders Windelhed",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/andwin/patchup.git"
+  },
   "packageManager": "pnpm@10.20.0",
   "dependencies": {
     "@inquirer/prompts": "^8.3.0",
