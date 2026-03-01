@@ -7,7 +7,7 @@ Automatically update npm packages one at a time, running tests after each update
 - Updates packages individually with automatic test verification
 - Rolls back failed updates automatically
 - Creates a git commit for each successful update
-- Supports pnpm workspaces
+- Supports npm and pnpm workspaces
 - Interactive package selection
 - Filter by workspace, package name, or version diff (patch/minor/major)
 
