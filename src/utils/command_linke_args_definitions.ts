@@ -44,6 +44,13 @@ const commandLineArgsDefinitions: OptionDefinitionWithDescription[] = [
     type: String,
     description: 'Custom command to run before updating packages.',
   },
+  {
+    name: 'auto',
+    alias: 'a',
+    type: Boolean,
+    defaultValue: false,
+    description: 'Automatically apply all updates matching the filters.',
+  },
 ]
 
 export default commandLineArgsDefinitions

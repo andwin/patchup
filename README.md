@@ -27,6 +27,7 @@ npx patchup [options]
 | `--max-version-diff <diff>` | `-m` | Filter by max version diff: `patch`, `minor`, or `major` |
 | `--test <command>` | | Custom test command (default: `pnpm test`) |
 | `--pre-update <command>` | | Command to run before each update |
+| `--auto` | `-a` | Automatically apply all updates matching the filters |
 
 ### Examples
 

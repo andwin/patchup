@@ -120,19 +120,28 @@ const run = async () => {
   }
 
   let updatesToApply: Update[]
-  try {
-    updatesToApply = await checkbox({
-      message: 'Select updates to apply',
-      choices: choices,
-      pageSize: 20,
-      theme: inquirerTheme,
-      loop: false,
-    })
-  } catch (e) {
-    if (e instanceof Error && e.name === 'ExitPromptError') {
-      process.exit(0)
+  if (commandLineArguments.auto) {
+    updatesToApply = choices
+      .filter(
+        (choice): choice is { name: string; value: Update } =>
+          'value' in choice,
+      )
+      .map((choice) => choice.value)
+  } else {
+    try {
+      updatesToApply = await checkbox({
+        message: 'Select updates to apply',
+        choices: choices,
+        pageSize: 20,
+        theme: inquirerTheme,
+        loop: false,
+      })
+    } catch (e) {
+      if (e instanceof Error && e.name === 'ExitPromptError') {
+        process.exit(0)
+      }
+      throw e
     }
-    throw e
   }
 
   if (!updatesToApply.length) {
