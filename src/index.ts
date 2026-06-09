@@ -6,6 +6,7 @@ import chalk from 'chalk'
 import commandLineArgs from 'command-line-args'
 import type Update from './types/update'
 import applyUpdate from './utils/apply_update'
+import buildChoices from './utils/build_choices'
 import commandLineArgsDefinitions from './utils/command_linke_args_definitions'
 import commitUpdate from './utils/commit_update'
 import detectPackageManager from './utils/detect_package_manager'
@@ -72,47 +73,7 @@ const run = async () => {
   }
 
   logger.info('Listing updates')
-  const choices = []
-  for (const workspace of filteredWorkspaces) {
-    logger.debug('Listing updates for workspace', workspace)
-    const updates = await listUpdatesForWorkspace(workspace, packageManager)
-    logger.debug('Updates found', updates.length)
-    for (const update of updates) {
-      logger.debug(update.packageName, update.versionDiff)
-    }
-    let filteredUpdates: Update[]
-    try {
-      filteredUpdates = filterUpdates(
-        updates,
-        filter.packages,
-        filter.maxVersionDiff,
-      )
-    } catch (e) {
-      logger.error('Error filtering updates', e)
-      process.exit(1)
-    }
-
-    logger.debug('Filtered updates', filteredUpdates.length)
-    for (const update of filteredUpdates) {
-      logger.debug(update.packageName, update.versionDiff)
-    }
-    if (!filteredUpdates.length) {
-      continue
-    }
-
-    if (choices.length) {
-      choices.push(new Separator(' '))
-    }
-    if (workspace.name) {
-      choices.push(new Separator(chalk.bold(workspace.name)))
-    }
-    choices.push(
-      ...filteredUpdates.map((update) => ({
-        name: `${update.packageName} ${update.currentVersion} => ${update.latestVersion} (${update.versionDiff})`,
-        value: update,
-      })),
-    )
-  }
+  const choices = await buildChoices(packageManager, filteredWorkspaces, filter)
 
   if (!choices.length) {
     logger.error('No updates available')
