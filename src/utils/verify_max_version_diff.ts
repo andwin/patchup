@@ -1,4 +1,4 @@
-import type VersionDiff from '../types/version_diff'
+import type { VersionDiffWithoutUnknown } from '../types/version_diff'
 import versionDiffValues from './version_diff_values'
 
 const validVersionDiffsString = Object.keys(versionDiffValues)
@@ -6,7 +6,7 @@ const validVersionDiffsString = Object.keys(versionDiffValues)
   .join(', ')
 
 export const verifyMaxVersionDiff = (
-  maxVersionDiff: VersionDiff | undefined,
+  maxVersionDiff: VersionDiffWithoutUnknown | undefined,
 ) => {
   if (!maxVersionDiff) return
 

@@ -1,10 +1,9 @@
 import { execa } from 'execa'
-import semver from 'semver'
 import type PackageManager from '../types/package_manager'
 import type Update from '../types/update'
 import type VersionDiff from '../types/version_diff'
 import type Workspace from '../types/workspace'
-import versionDiffValues from './version_diff_values'
+import semverDiff from './semver_diff'
 
 const listUpdatesForWorkspaceForPnpm = async (
   workspace: Workspace,
@@ -38,42 +37,15 @@ const listUpdatesForWorkspaceForPnpm = async (
       } = value
       if (isDeprecated) return undefined
 
-      try {
-        let versionDiff: string | null
-        try {
-          versionDiff = semver.diff(currentVersion, latestVersion)
-        } catch {
-          throw new Error('Exception parsing semver diff for package')
-        }
-
-        if (!versionDiff || !versionDiffValues[versionDiff as VersionDiff]) {
-          throw new Error('Invalid version diff for package')
-        }
-
-        const update: Update = {
-          packageName,
-          workspace,
-          versionDiff: versionDiff as VersionDiff,
-          currentVersion,
-          latestVersion,
-        }
-        return update
-      } catch (e) {
-        const workspaceName = workspace.name
-          ? ` workspace: ${workspace.name}`
-          : ''
-
-        console.error(
-          (e as Error).message +
-            packageName +
-            ' currentVersion: ' +
-            currentVersion +
-            ' latestVersion: ' +
-            latestVersion +
-            workspaceName,
-        )
-        return undefined
+      const versionDiff = semverDiff(currentVersion, latestVersion)
+      const update: Update = {
+        packageName,
+        workspace,
+        versionDiff,
+        currentVersion,
+        latestVersion,
       }
+      return update
     })
     .filter(Boolean) as Update[]
 
@@ -112,42 +84,15 @@ const listUpdatesForWorkspaceForNpm = async (
       } = value
       if (isDeprecated) return undefined
 
-      try {
-        let versionDiff: string | null
-        try {
-          versionDiff = semver.diff(currentVersion, latestVersion)
-        } catch {
-          throw new Error('Exception parsing semver diff for package')
-        }
-
-        if (!versionDiff || !versionDiffValues[versionDiff as VersionDiff]) {
-          throw new Error('Invalid version diff for package')
-        }
-
-        const update: Update = {
-          packageName,
-          workspace,
-          versionDiff: versionDiff as VersionDiff,
-          currentVersion,
-          latestVersion,
-        }
-        return update
-      } catch (e) {
-        const workspaceName = workspace.name
-          ? ` workspace: ${workspace.name}`
-          : ''
-
-        console.error(
-          (e as Error).message +
-            packageName +
-            ' currentVersion: ' +
-            currentVersion +
-            ' latestVersion: ' +
-            latestVersion +
-            workspaceName,
-        )
-        return undefined
+      const versionDiff = semverDiff(currentVersion, latestVersion)
+      const update: Update = {
+        packageName,
+        workspace,
+        versionDiff: versionDiff as VersionDiff,
+        currentVersion,
+        latestVersion,
       }
+      return update
     })
     .filter(Boolean) as Update[]
 
