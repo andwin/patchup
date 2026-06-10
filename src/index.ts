@@ -1,21 +1,16 @@
 #!/usr/bin/env node
 
 import fs from 'node:fs/promises'
-import chalk from 'chalk'
 import commandLineArgs from 'command-line-args'
-import applyUpdate from './utils/apply_update'
+import applyUpdates from './utils/apply_updates'
 import buildChoices from './utils/build_choices'
 import commandLineArgsDefinitions from './utils/command_line_args_definitions'
-import commitUpdate from './utils/commit_update'
 import detectPackageManager from './utils/detect_package_manager'
 import displayHelp from './utils/display_help'
 import filterWorkspaces from './utils/filter_workspaces'
 import installPackagesBeforeUpdate from './utils/install_packages'
 import listWorkspaces from './utils/list_workspaces'
 import { enableDebug, logger } from './utils/logger'
-import rollbackUpdate from './utils/rollback_update'
-import runCommand from './utils/run_command'
-import runTests from './utils/run_tests'
 import selectUpdates from './utils/select_updates'
 import verifyGitRepo from './utils/verify_git_repo'
 import { verifyMaxVersionDiff } from './utils/verify_max_version_diff'
@@ -89,52 +84,7 @@ const run = async () => {
       workspace: update.workspace.name,
     })),
   )
-  for (const update of updatesToApply) {
-    logger.info('') // Space between updates
-
-    try {
-      logger.info(
-        'Updating package',
-        chalk.bold(update.packageName),
-        update.workspace.name ? `in ${chalk.bold(update.workspace.name)}` : '',
-      )
-
-      if (customCommands.preUpdate) {
-        logger.info('Running custom pre-update command')
-        await runCommand(customCommands.preUpdate)
-      }
-
-      await applyUpdate(packageManager, update)
-
-      if (customCommands.test) {
-        logger.info('Running custom test command')
-        await runCommand(customCommands.test)
-      } else {
-        logger.info('Running tests')
-        await runTests(packageManager)
-      }
-    } catch (e) {
-      const error = e as Error & { stdout?: string; stderr?: string }
-      logger.error(`❌ ${error.message}`)
-      let logMessage = `❌ Updating ${update.packageName} in ${update.workspace.name} failed`
-      logMessage += `\n\n${error.message}`
-      if (error.stderr) {
-        logMessage += `\n\n${error.stderr}`
-      }
-      if (error.stdout) {
-        logMessage += `\n\n${error.stdout}`
-      }
-      logMessage += `\n\n`
-      await fs.appendFile(logfile, logMessage)
-
-      logger.info('Rolling back update')
-      await rollbackUpdate(packageManager)
-      continue
-    }
-
-    logger.info('✅ Update applied successfully')
-    await commitUpdate(update)
-  }
+  await applyUpdates(packageManager, updatesToApply, customCommands, logfile)
 }
 
 run()
