@@ -13,8 +13,8 @@ const applyUpdates = async (
   packageManager: PackageManager,
   updates: Update[],
   customCommands: {
-    preUpdate: string
-    test: string
+    preUpdate?: string
+    test?: string
   },
 ): Promise<void> => {
   for (const update of updates) {
