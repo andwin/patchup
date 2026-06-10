@@ -1,5 +1,6 @@
 import { Separator } from '@inquirer/prompts'
 import chalk from 'chalk'
+import type Choice from '../types/choice'
 import type PackageManager from '../types/package_manager'
 import type Update from '../types/update'
 import type { VersionDiffWithoutUnknown } from '../types/version_diff'
@@ -15,7 +16,7 @@ const buildChoices = async (
     packages: string[]
     maxVersionDiff: VersionDiffWithoutUnknown
   },
-) => {
+): Promise<Choice[]> => {
   const choices = []
 
   for (const workspace of filteredWorkspaces) {

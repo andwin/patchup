@@ -1,26 +1,22 @@
 #!/usr/bin/env node
 
 import fs from 'node:fs/promises'
-import { checkbox, Separator } from '@inquirer/prompts'
 import chalk from 'chalk'
 import commandLineArgs from 'command-line-args'
-import type Update from './types/update'
 import applyUpdate from './utils/apply_update'
 import buildChoices from './utils/build_choices'
 import commandLineArgsDefinitions from './utils/command_linke_args_definitions'
 import commitUpdate from './utils/commit_update'
 import detectPackageManager from './utils/detect_package_manager'
 import displayHelp from './utils/display_help'
-import filterUpdates from './utils/filter_updates'
 import filterWorkspaces from './utils/filter_workspaces'
-import inquirerTheme from './utils/inquirer_theme'
 import installPackagesBeforeUpdate from './utils/install_packages'
-import listUpdatesForWorkspace from './utils/list_updates_for_workspace'
 import listWorkspaces from './utils/list_workspaces'
 import { enableDebug, logger } from './utils/logger'
 import rollbackUpdate from './utils/rollback_update'
 import runCommand from './utils/run_command'
 import runTests from './utils/run_tests'
+import selectUpdates from './utils/select_updates'
 import verifyGitRepo from './utils/verify_git_repo'
 import { verifyMaxVersionDiff } from './utils/verify_max_version_diff'
 import verifyPristineState from './utils/verify_pristine_state'
@@ -80,31 +76,7 @@ const run = async () => {
     process.exit(0)
   }
 
-  let updatesToApply: Update[]
-  if (commandLineArguments.auto) {
-    updatesToApply = choices
-      .filter(
-        (choice): choice is { name: string; value: Update } =>
-          'value' in choice,
-      )
-      .map((choice) => choice.value)
-  } else {
-    try {
-      updatesToApply = await checkbox({
-        message: 'Select updates to apply',
-        choices: choices,
-        pageSize: 20,
-        theme: inquirerTheme,
-        loop: false,
-      })
-    } catch (e) {
-      if (e instanceof Error && e.name === 'ExitPromptError') {
-        process.exit(0)
-      }
-      throw e
-    }
-  }
-
+  const updatesToApply = await selectUpdates(commandLineArguments, choices)
   if (!updatesToApply.length) {
     logger.error('No updates selected')
     process.exit(0)
