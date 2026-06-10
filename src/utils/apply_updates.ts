@@ -1,9 +1,9 @@
-import fs from 'node:fs/promises'
 import chalk from 'chalk'
 import type PackageManager from '../types/package_manager'
 import type Update from '../types/update'
 import applyUpdate from './apply_update'
 import commitUpdate from './commit_update'
+import * as fileLogger from './file_logger'
 import logger from './logger'
 import rollbackUpdate from './rollback_update'
 import runCommand from './run_command'
@@ -16,7 +16,6 @@ const applyUpdates = async (
     preUpdate: string
     test: string
   },
-  logfile: string,
 ): Promise<void> => {
   for (const update of updates) {
     logger.info('') // Space between updates
@@ -45,16 +44,8 @@ const applyUpdates = async (
     } catch (e) {
       const error = e as Error & { stdout?: string; stderr?: string }
       logger.error(`❌ ${error.message}`)
-      let logMessage = `❌ Updating ${update.packageName} in ${update.workspace.name} failed`
-      logMessage += `\n\n${error.message}`
-      if (error.stderr) {
-        logMessage += `\n\n${error.stderr}`
-      }
-      if (error.stdout) {
-        logMessage += `\n\n${error.stdout}`
-      }
-      logMessage += `\n\n`
-      await fs.appendFile(logfile, logMessage)
+
+      await fileLogger.log(update, error)
 
       logger.info('Rolling back update')
       await rollbackUpdate(packageManager)

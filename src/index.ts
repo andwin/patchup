@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
-import fs from 'node:fs/promises'
 import commandLineArgs from 'command-line-args'
 import applyUpdates from './utils/apply_updates'
 import buildChoices from './utils/build_choices'
 import commandLineArgsDefinitions from './utils/command_line_args_definitions'
 import detectPackageManager from './utils/detect_package_manager'
 import displayHelp from './utils/display_help'
+import * as fileLogger from './utils/file_logger'
 import filterWorkspaces from './utils/filter_workspaces'
 import installPackagesBeforeUpdate from './utils/install_packages'
 import listWorkspaces from './utils/list_workspaces'
@@ -28,8 +28,6 @@ const customCommands = {
   preUpdate: commandLineArguments['pre-update'],
 }
 
-const logfile = 'patchup.log'
-
 const run = async () => {
   if (commandLineArguments.help) {
     displayHelp(commandLineArgsDefinitions)
@@ -45,7 +43,7 @@ const run = async () => {
   const packageManager = await detectPackageManager()
   logger.debug('Detected package manager', packageManager)
 
-  await fs.unlink(logfile).catch(() => {})
+  await fileLogger.clear()
 
   await installPackagesBeforeUpdate(packageManager)
 
@@ -84,7 +82,7 @@ const run = async () => {
       workspace: update.workspace.name,
     })),
   )
-  await applyUpdates(packageManager, updatesToApply, customCommands, logfile)
+  await applyUpdates(packageManager, updatesToApply, customCommands)
 }
 
 run()
