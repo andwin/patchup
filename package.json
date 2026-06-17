@@ -41,7 +41,7 @@
     "@types/command-line-args": "^5.2.3",
     "@types/command-line-usage": "^5.0.4",
     "@types/node": "^25.9.3",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.3",
     "vitest": "4.1.9"
   }
 }
