@@ -6,7 +6,7 @@ const runTestsForPnpm = async () => {
 }
 
 const runTestsForNpm = async () => {
-  await execa`pnpm test`
+  await execa`npm test`
 }
 
 const implementationForPackageManager: Record<
