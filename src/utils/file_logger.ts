@@ -1,5 +1,6 @@
 import fs from 'node:fs/promises'
 import type Update from '../types/update'
+import describeUpdate from './describe_update'
 
 const logfile = 'patchup.log'
 
@@ -24,13 +25,4 @@ export const log = async (
   logMessage += `\n\n`
 
   await fs.appendFile(logfile, logMessage)
-}
-
-const describeUpdate = (update: Update) => {
-  let description = update.packageName
-  if (update.workspace.name) {
-    description += ` in ${update.workspace.name}`
-  }
-
-  return description
 }

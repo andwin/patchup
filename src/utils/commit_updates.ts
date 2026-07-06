@@ -1,5 +1,6 @@
 import { execa } from 'execa'
 import type Update from '../types/update'
+import describeUpdate from './describe_update'
 
 const commitUpdates = async (updates: Update[]) => {
   const [firstUpdate] = updates
@@ -15,15 +16,6 @@ const commitUpdates = async (updates: Update[]) => {
 
   await execa('git', ['add', '--all'])
   await execa('git', ['commit', ...messageArguments])
-}
-
-const describeUpdate = (update: Update) => {
-  let description = update.packageName
-  if (update.workspace.name) {
-    description += ` in ${update.workspace.name}`
-  }
-
-  return description
 }
 
 export default commitUpdates
