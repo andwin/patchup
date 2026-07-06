@@ -28,6 +28,7 @@ npx patchup [options]
 | `--test <command>` | | Custom test command (default: `pnpm test`) |
 | `--pre-update <command>` | | Command to run before each update |
 | `--auto` | `-a` | Automatically apply all updates matching the filters |
+| `--combine` | `-c` | Apply all updates together, run the tests once, and commit as a single commit |
 
 ### Examples
 
@@ -43,6 +44,9 @@ npx patchup --test "npm run test:ci"
 
 # Filter for specific packages
 npx patchup -p sass -p dayjs
+
+# Apply all updates together and run the tests just once
+npx patchup -a -c
 ```
 
 ## Development

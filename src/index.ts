@@ -82,7 +82,12 @@ const run = async () => {
       workspace: update.workspace.name,
     })),
   )
-  await applyUpdates(packageManager, updatesToApply, customCommands)
+  await applyUpdates(
+    packageManager,
+    updatesToApply,
+    customCommands,
+    commandLineArguments.combine,
+  )
 }
 
 run()

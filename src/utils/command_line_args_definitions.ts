@@ -51,6 +51,14 @@ const commandLineArgsDefinitions: OptionDefinitionWithDescription[] = [
     defaultValue: false,
     description: 'Automatically apply all updates matching the filters.',
   },
+  {
+    name: 'combine',
+    alias: 'c',
+    type: Boolean,
+    defaultValue: false,
+    description:
+      'Apply all updates together, run the tests once, and commit as a single commit.',
+  },
 ]
 
 export default commandLineArgsDefinitions
