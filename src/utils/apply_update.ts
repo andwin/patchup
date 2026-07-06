@@ -1,6 +1,7 @@
 import { execa } from 'execa'
 import type PackageManager from '../types/package_manager'
 import type Update from '../types/update'
+import describeUpdate from './describe_update'
 
 const applyUpdateForPnpm = async (update: Update): Promise<void> => {
   const args: string[] = []
@@ -45,7 +46,7 @@ const applyUpdate = async (
   try {
     await implementationForPackageManager[packageManager](update)
   } catch (e) {
-    ;(e as Error).message = 'Failed to apply update'
+    ;(e as Error).message = `Failed to apply update ${describeUpdate(update)}`
     throw e
   }
 }
