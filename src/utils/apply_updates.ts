@@ -68,6 +68,7 @@ const applyBatch = async (
 
     logger.info(plural ? 'Rolling back updates' : 'Rolling back update')
     await rollbackUpdate(packageManager)
+
     return
   }
 
