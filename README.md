@@ -60,8 +60,8 @@ pnpm test
 pnpm build
 pnpm publish
 
-# Link
-pnpm link --global
-pnpm remove --global patchup
-pnpm list --global
+# Install globally from local checkout
+pnpm add -g .
+pnpm remove -g patchup
+pnpm list -g
 ```
