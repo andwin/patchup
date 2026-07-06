@@ -58,6 +58,8 @@ const applyBatch = async (
       logger.info('Running tests')
       await runTests(packageManager)
     }
+
+    await commitUpdates(batch)
   } catch (e) {
     const error = e as Error & { stdout?: string; stderr?: string }
     logger.error(`❌ ${error.message}`)
@@ -74,7 +76,6 @@ const applyBatch = async (
       ? '✅ All updates applied successfully'
       : '✅ Update applied successfully',
   )
-  await commitUpdates(batch)
 }
 
 export default applyUpdates
