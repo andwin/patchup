@@ -26,7 +26,7 @@ npx patchup [options]
 | `--package <name>` | `-p` | Filter by package name (can be used multiple times) |
 | `--max-version-diff <diff>` | `-m` | Filter by max version diff: `patch`, `minor`, or `major` |
 | `--test <command>` | | Custom test command (default: `pnpm test`) |
-| `--pre-update <command>` | | Command to run before each update |
+| `--pre-update <command>` | | Custom command to run before updating packages |
 | `--auto` | `-a` | Automatically apply all updates matching the filters |
 | `--combine` | `-c` | Apply all updates together, run the tests once, and commit as a single commit |
 
