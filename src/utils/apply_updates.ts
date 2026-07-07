@@ -44,7 +44,7 @@ const applyBatch = async (
 
     for (const update of batch) {
       logger.info(
-        'Updating package',
+        '📦 Updating package',
         chalk.bold(update.packageName),
         update.workspace.name ? `in ${chalk.bold(update.workspace.name)}` : '',
       )
@@ -52,10 +52,10 @@ const applyBatch = async (
     }
 
     if (customCommands.test) {
-      logger.info('Running custom test command')
+      logger.info('🧪 Running custom test command')
       await runCommand(customCommands.test)
     } else {
-      logger.info('Running tests')
+      logger.info('🧪 Running tests')
       await runTests(packageManager)
     }
 
