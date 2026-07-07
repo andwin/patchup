@@ -11,6 +11,7 @@ import filterWorkspaces from './utils/filter_workspaces'
 import installPackagesBeforeUpdate from './utils/install_packages'
 import listWorkspaces from './utils/list_workspaces'
 import { enableDebug, logger } from './utils/logger'
+import packageVersion from './utils/package_version'
 import selectUpdates from './utils/select_updates'
 import verifyGitRepo from './utils/verify_git_repo'
 import { verifyMaxVersionDiff } from './utils/verify_max_version_diff'
@@ -31,6 +32,11 @@ const customCommands = {
 const run = async () => {
   if (commandLineArguments.help) {
     displayHelp(commandLineArgsDefinitions)
+    process.exit(0)
+  }
+
+  if (commandLineArguments.version) {
+    console.log(packageVersion())
     process.exit(0)
   }
 

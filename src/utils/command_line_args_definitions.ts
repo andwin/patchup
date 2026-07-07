@@ -8,6 +8,12 @@ const commandLineArgsDefinitions: OptionDefinitionWithDescription[] = [
     description: 'Display this usage guide.',
   },
   {
+    name: 'version',
+    alias: 'v',
+    type: Boolean,
+    description: 'Display the version of the application.',
+  },
+  {
     name: 'debug',
     alias: 'd',
     type: Boolean,
