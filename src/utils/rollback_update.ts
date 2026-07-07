@@ -4,6 +4,7 @@ import installPackages from './install_packages'
 
 const rollbackUpdate = async (packageManager: PackageManager) => {
   await execa('git', ['reset', '--hard'])
+  await execa('git', ['clean', '-df'])
 
   await installPackages(packageManager)
 }
