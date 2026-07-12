@@ -1,8 +1,8 @@
-import chalk from 'chalk'
 import type PackageManager from '../types/package_manager'
 import type Update from '../types/update'
 import applyUpdate from './apply_update'
 import commitUpdates from './commit_updates'
+import describeUpdate from './describe_update'
 import * as fileLogger from './file_logger'
 import logger from './logger'
 import rollbackUpdate from './rollback_update'
@@ -43,11 +43,7 @@ const applyBatch = async (
     }
 
     for (const update of batch) {
-      logger.info(
-        '📦 Updating package',
-        chalk.bold(update.packageName),
-        update.workspace.name ? `in ${chalk.bold(update.workspace.name)}` : '',
-      )
+      logger.info('📦 Updating package', describeUpdate(update))
       await applyUpdate(packageManager, update)
     }
 
